@@ -57,12 +57,6 @@ export default {
       if (certainType.checkbox) {
         const { isChecked } = others;
         this.toggleStatus('Checked', row, rowIndex, isChecked);
-        if (row._childrenLen > 0) {
-          const childrenIndex = this.getChildrenIndex(row._level, rowIndex, false);
-          for (let i = 0; i < childrenIndex.length; i++) {
-            this.toggleStatus('Checked', latestData[childrenIndex[i]], childrenIndex[i], isChecked);
-          }
-        }
         return this.table.$emit('checkbox-click', latestData[rowIndex], column, columnIndex, $event);
       }
       // Tree's icon
@@ -181,31 +175,13 @@ export default {
         let allCheck;
         let childrenIndex;
         const hasChildren = row._childrenLen > 0;
-        if (hasChildren) {
-          childrenIndex = this.getChildrenIndex(row._level, rowIndex, false);
-          allCheck = true;
-          for (let i = 0; i < childrenIndex.length; i++) {
-            if (!this.table.bodyData[childrenIndex[i]]._isChecked) {
-              allCheck = false;
-              break;
-            }
-          }
-        } else {
           allCheck = row._isChecked;
-        }
         let indeterminate = false;
-        if (hasChildren && !allCheck) {
-          for (let i = 0; i < childrenIndex.length; i++) {
-            if (this.table.bodyData[childrenIndex[i]]._isChecked) {
-              indeterminate = true;
-              break;
-            }
-          }
-        }
         return <Checkbox
           indeterminate={ indeterminate }
           value={ allCheck }
-          onOn-change={ isChecked => this.handleEvent(null, 'checkbox', { row, rowIndex, column, columnIndex }, { isChecked }) }>
+          onOn-change={ isChecked => this.handleEvent(null, 'checkbox', { row, rowIndex, column, columnIndex }, { isChecked }) }
+		  >
           </Checkbox>;
       }
       // Tree's firstProp
